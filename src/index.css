@@ -1,0 +1,46 @@
+.body {
+  min-height: 100vh;
+}
+
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; /* Позволяет элементам переноситься на новую строку */
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px; /* Уменьшаем отступы на мобильных устройствах */
+  }
+
+  .row {
+    justify-content: center; /* Центрируем элементы на мобильных устройствах */
+  }
+
+  .card {
+    width: 100%; /* Карточки занимают всю ширину */
+    margin-bottom: 15px; /* Добавляем отступ между карточками */
+  }
+}
+
+@media (max-width: 576px) {
+  .card {
+    font-size: 14px; /* Уменьшаем размер шрифта для мобильных устройств */
+  }
+}
