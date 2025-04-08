@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://github.com/KeEnY1504/bibi",
+  "homepage": "https://keeny1504.github.io/bibi/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
