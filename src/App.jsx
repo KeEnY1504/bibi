@@ -40,24 +40,6 @@ const EXCHANGES = [
       return ticker ? parseFloat(ticker.lastPrice) : 0;
     },
   },
-  // Замените текущий объект "Telegram Wallet" на:
-  {
-    name: 'Telegram Wallet (TON)',
-    api: 'https://tonapi.io/ton-api/v2/rates/',
-    params: {
-      tokens: 'ton',
-      currencies: 'usd',
-    },
-    pairs: {
-      TON: 'ton', // Ключ должен совпадать с параметром tokens
-    },
-    parser: (data) => {
-      const rates = data?.rates || {};
-      return (symbol) => {
-        return rates[symbol]?.prices?.usd || 0;
-      };
-    },
-  },
   {
     name: 'HTX (Huobi)',
     api: 'https://api.huobi.pro/market/tickers/',
@@ -71,14 +53,41 @@ const EXCHANGES = [
       SOLANA: 'solusdt',
     },
     parser: (data) => {
+      if (!data?.data) {
+        console.error('HTX API Error:', data);
+        return () => 0;
+      }
       return (symbol) => {
-        const ticker = data.data?.find((t) => t.symbol.toLowerCase() === symbol);
+        const ticker = data.data.find((t) => t.symbol.toLowerCase() === symbol);
         return ticker ? ticker.close : 0;
       };
     },
   },
+  {
+    name: 'Telegram Wallet (TON)',
+    api: 'https://tonapi.io/v2/rates',
+    params: {
+      tokens: 'ton',
+      currencies: 'usd',
+    },
+    pairs: {
+      TON: 'ton',
+      SOLANA: 'solana',
+      BTC: 'btc',
+      ETH: 'eth',
+      USDT: 'usdt',
+      LTC: 'ltc',
+      XRP: 'xrp',
+    },
+    parser: (data) => {
+      if (!data?.rates?.TON?.prices?.USD) {
+        console.error('TON API Error:', data);
+        return () => 0;
+      }
+      return () => data.rates.TON.prices.USD;
+    },
+  },
 ];
-
 const CRYPTOS = ['BTC', 'ETH', 'USDT', 'SOLANA', 'TON', 'XRP', 'LTC'];
 
 const App = () => {
@@ -98,12 +107,14 @@ const App = () => {
             const response = await axios({
               method: 'get',
               url: exchange.api,
-
               params: exchange.params || { symbol },
-              timeout: 2000,
+              timeout: 1800,
             });
 
-            if (!response?.data || response.status !== 200) return { crypto, price: 0 };
+            if (!response?.data || response.status !== 200) {
+              console.error(`${exchange.name} ${crypto} invalid response:`, response);
+              return { crypto, price: 0 };
+            }
 
             let price;
             if (typeof exchange.parser(response.data) === 'function') {
@@ -152,7 +163,7 @@ const App = () => {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 15000);
+    const interval = setInterval(fetchData, 2000);
     return () => {
       isMounted = false;
       clearInterval(interval);

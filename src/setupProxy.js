@@ -31,10 +31,11 @@ module.exports = function (app) {
     createProxyMiddleware({
       target: 'https://tonapi.io',
       changeOrigin: true,
-      pathRewrite: { '^/ton-api': '' },
+      pathRewrite: {
+        '^/ton-api': '/v2', // ← Исправленный путь
+      },
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
       },
     }),
   );
