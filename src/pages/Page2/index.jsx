@@ -9,7 +9,7 @@ const CONFIG = {
     UPBIT: 'https://api.upbit.com/v1',
     BINANCE: 'https://api.binance.com/api/v3',
   },
-  UPDATE_INTERVAL: 5000, // Интервал обновления в миллисекундах (30 секунд)
+  UPDATE_INTERVAL: 8000, // Интервал обновления в миллисекундах (30 секунд)
   ARBITRAGE_THRESHOLD: 1, // Порог арбитража в %
   COMMISSION: {
     UPBIT: 0.05, // Комиссия Upbit (в процентах)
